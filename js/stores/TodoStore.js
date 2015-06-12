@@ -30,7 +30,8 @@ function create(text) {
   _todos[id] = {
     id: id,
     complete: false,
-    text: text
+    text: text,
+    caseFormat: 0
   };
 }
 
@@ -76,6 +77,37 @@ function destroyCompleted() {
   }
 }
 
+/**
+  * Toggles the case of the TODO item.
+  */
+function cycleCase(id) {
+  console.log('IN TODOSTORE > cycleCase() with ' + id);
+  console.log('OLD TODO DATA', _todos[id]);
+
+  var newFormat = _todos[id].caseFormat;
+  var newValue = _todos[id].text;
+
+  newFormat++;
+  if (newFormat > 2) { newFormat = 0; }
+
+  console.log('Case format is now:' + newFormat);
+
+  if (newFormat === 0) {
+    newValue = newValue.toLowerCase().split(' ');
+    newValue = newValue.map(function(word) {
+      return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+    });
+    newValue = newValue.join(' ');
+  }
+  if (newFormat === 1) { newValue = newValue.toUpperCase(); }
+  if (newFormat === 2) { newValue = newValue.toLowerCase(); }
+
+  _todos[id].text = newValue;
+  _todos[id].caseFormat = newFormat;
+
+  console.log('NEW TODO DATA', _todos[id]);
+}
+
 var TodoStore = assign({}, EventEmitter.prototype, {
 
   /**
@@ -116,6 +148,7 @@ var TodoStore = assign({}, EventEmitter.prototype, {
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
+
 });
 
 // Register callback to handle all updates
@@ -165,6 +198,12 @@ AppDispatcher.register(function(action) {
 
     case TodoConstants.TODO_DESTROY_COMPLETED:
       destroyCompleted();
+      TodoStore.emitChange();
+      break;
+
+    case TodoConstants.TODO_CYCLE_CASE:
+      console.log('IN TODOSTORE > TODO_CYCLE_CASE with action:', action);
+      cycleCase(action.id);
       TodoStore.emitChange();
       break;
 

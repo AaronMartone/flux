@@ -53,7 +53,8 @@ var TodoItem = React.createClass({
           'completed': todo.complete,
           'editing': this.state.isEditing
         })}
-        key={todo.id}>
+        key={todo.id}
+        data-case-format={todo.caseFormat}>
         <div className="view">
           <input
             className="toggle"
@@ -64,6 +65,7 @@ var TodoItem = React.createClass({
           <label onDoubleClick={this._onDoubleClick}>
             {todo.text}
           </label>
+          <button className="cycleCase" onClick={this._onCycleCase} />
           <button className="destroy" onClick={this._onDestroyClick} />
         </div>
         {input}
@@ -92,6 +94,15 @@ var TodoItem = React.createClass({
 
   _onDestroyClick: function() {
     TodoActions.destroy(this.props.todo.id);
+  },
+
+  _onCycleCase: function() {
+    console.log('TODOITEM > _onCycleCase()');
+    console.log('Calling TODOACTIONS cycleCase() with id:' + this.props.todo.id);
+    //console.log('Cycle text: ' + this.props.todo.text + ', case format: ' + this.props.todo.caseFormat);
+    //console.log('IN _ONCYCLECASE() with ', this.props.todo);
+    // this calls 
+    TodoActions.cycleCase(this.props.todo.id);
   }
 
 });
