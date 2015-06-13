@@ -15,6 +15,7 @@ var TodoConstants = require('../constants/TodoConstants');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
+var _todoFilter = 0;
 
 var _todos = {};
 
@@ -30,7 +31,8 @@ function create(text) {
   _todos[id] = {
     id: id,
     complete: false,
-    text: text
+    text: text,
+    caseFormat: 0
   };
 }
 
@@ -76,6 +78,23 @@ function destroyCompleted() {
   }
 }
 
+/**
+  * Cycles the case of the TODO item.
+  */
+function cycleCase(id) {
+  _todos[id].caseFormat++;
+  if (_todos[id].caseFormat > 3) { _todos[id].caseFormat = 0; }
+}
+
+/**
+  * Cycles the display of filtered TODO items.
+  */
+function cycleFilter() {
+  _todoFilter++;
+  if (_todoFilter > 3) { _todoFilter = 0; }
+  console.log('FILTER IS NOW:' + _todoFilter);
+}
+
 var TodoStore = assign({}, EventEmitter.prototype, {
 
   /**
@@ -99,6 +118,10 @@ var TodoStore = assign({}, EventEmitter.prototype, {
     return _todos;
   },
 
+  getFilter: function() {
+    return _todoFilter;
+  },
+
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -116,6 +139,7 @@ var TodoStore = assign({}, EventEmitter.prototype, {
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
+
 });
 
 // Register callback to handle all updates
@@ -165,6 +189,18 @@ AppDispatcher.register(function(action) {
 
     case TodoConstants.TODO_DESTROY_COMPLETED:
       destroyCompleted();
+      TodoStore.emitChange();
+      break;
+
+    case TodoConstants.TODO_CYCLE_CASE:
+      console.log('IN TODOSTORE > TODO_CYCLE_CASE with action:', action);
+      cycleCase(action.id);
+      TodoStore.emitChange();
+      break;
+
+    case TodoConstants.TODO_CYCLE_FILTER:
+      console.log('IN TODOSTORE > TODO_CYCLE_FILTER with _todoFilter:' + _todoFilter);
+      cycleFilter();
       TodoStore.emitChange();
       break;
 

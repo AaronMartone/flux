@@ -37,6 +37,30 @@ var TodoActions = {
   },
 
   /**
+    * Toggles the case of the ToDo
+    * @param {object} todo
+    */
+  cycleCase: function(id) {
+    console.log('TODOACTIONS > cycleCase() given TODO id:' + id);
+    console.log('Calling DISPATCHER with actionType TODO_CYCLE_CASE and TODO id:' + id);
+    //console.log('IN TODOACTIONS > cycleCase with todo:', todo);
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_CYCLE_CASE,
+      id: id
+    })
+  },
+
+  /**
+    * Cycles the filtering of the TODO
+    * @param {object} todo
+    */
+  cycleFilter: function() {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_CYCLE_FILTER
+    })
+  },
+
+  /**
    * Toggle whether a single ToDo is complete
    * @param  {object} todo
    */

@@ -51,7 +51,7 @@ var Footer = React.createClass({
     }
 
   	return (
-      <footer id="footer">
+      <footer id="footer">      
         <span id="todo-count">
           <strong>
             {itemsLeft}

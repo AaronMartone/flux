@@ -36,8 +36,8 @@ var MainSection = React.createClass({
       todos.push(<TodoItem key={key} todo={allTodos[key]} />);
     }
 
-    return (
-      <section id="main">
+    return (      
+      <section id="main" data-filter={this.props.filter}>
         <input
           id="toggle-all"
           type="checkbox"

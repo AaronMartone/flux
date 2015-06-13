@@ -18,13 +18,16 @@ var MainSection = require('./MainSection.react');
 var React = require('react');
 var TodoStore = require('../stores/TodoStore');
 
+var TodoActions = require('../actions/TodoActions');
+
 /**
  * Retrieve the current TODO data from the TodoStore
  */
 function getTodoState() {
   return {
     allTodos: TodoStore.getAll(),
-    areAllComplete: TodoStore.areAllComplete()
+    areAllComplete: TodoStore.areAllComplete(),
+    filter: TodoStore.getFilter()
   };
 }
 
@@ -48,10 +51,12 @@ var TodoApp = React.createClass({
   render: function() {
   	return (
       <div>
+        <p className="filter"><button onClick={this._onCycleFilter}>Cycle Filtering</button></p>
         <Header />
         <MainSection
           allTodos={this.state.allTodos}
           areAllComplete={this.state.areAllComplete}
+          filter={this.state.filter}
         />
         <Footer allTodos={this.state.allTodos} />
       </div>
@@ -63,6 +68,14 @@ var TodoApp = React.createClass({
    */
   _onChange: function() {
     this.setState(getTodoState());
+  },
+
+  /**
+    * Event handler for cycling filtered TODOs.
+    */
+  _onCycleFilter: function() {
+    console.log('CYCLE FILTERING');
+    TodoActions.cycleFilter();
   }
 
 });
