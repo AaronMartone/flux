@@ -38,6 +38,21 @@ input[type="checkbox"] {
   outline: none;
 }
 
+p.filter {
+	text-align: center;
+	margin: 0;
+}
+
+p.filter button {
+	cursor: pointer;
+	background: #ededed;
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	padding: 10px 30px;
+	margin-top: 10px;
+	display: inline-block;
+}
+
 #todoapp {
 	background: #fff;
 	background: rgba(255, 255, 255, 0.9);
@@ -148,6 +163,16 @@ input[type="checkbox"] {
 	z-index: 2;
 	border-top: 1px dotted #adadad;
 }
+
+#main[data-filter='1'] li,
+#main[data-filter='2'] li,
+#main[data-filter='3'] li { 
+	display: none;
+}
+
+#main[data-filter='1'] li.format-uppercase { display: block; }
+#main[data-filter='2'] li.format-lowercase { display: block; }
+#main[data-filter='3'] li.format-titlecase { display: block; }
 
 label[for='toggle-all'] {
 	display: none;

@@ -51,6 +51,16 @@ var TodoActions = {
   },
 
   /**
+    * Cycles the filtering of the TODO
+    * @param {object} todo
+    */
+  cycleFilter: function() {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_CYCLE_FILTER
+    })
+  },
+
+  /**
    * Toggle whether a single ToDo is complete
    * @param  {object} todo
    */

@@ -15,6 +15,7 @@ var TodoConstants = require('../constants/TodoConstants');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
+var _todoFilter = 0;
 
 var _todos = {};
 
@@ -78,34 +79,20 @@ function destroyCompleted() {
 }
 
 /**
-  * Toggles the case of the TODO item.
+  * Cycles the case of the TODO item.
   */
 function cycleCase(id) {
-  console.log('IN TODOSTORE > cycleCase() with ' + id);
-  console.log('OLD TODO DATA', _todos[id]);
+  _todos[id].caseFormat++;
+  if (_todos[id].caseFormat > 3) { _todos[id].caseFormat = 0; }
+}
 
-  var newFormat = _todos[id].caseFormat;
-  var newValue = _todos[id].text;
-
-  newFormat++;
-  if (newFormat > 2) { newFormat = 0; }
-
-  console.log('Case format is now:' + newFormat);
-
-  if (newFormat === 0) {
-    newValue = newValue.toLowerCase().split(' ');
-    newValue = newValue.map(function(word) {
-      return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
-    });
-    newValue = newValue.join(' ');
-  }
-  if (newFormat === 1) { newValue = newValue.toUpperCase(); }
-  if (newFormat === 2) { newValue = newValue.toLowerCase(); }
-
-  _todos[id].text = newValue;
-  _todos[id].caseFormat = newFormat;
-
-  console.log('NEW TODO DATA', _todos[id]);
+/**
+  * Cycles the display of filtered TODO items.
+  */
+function cycleFilter() {
+  _todoFilter++;
+  if (_todoFilter > 3) { _todoFilter = 0; }
+  console.log('FILTER IS NOW:' + _todoFilter);
 }
 
 var TodoStore = assign({}, EventEmitter.prototype, {
@@ -129,6 +116,10 @@ var TodoStore = assign({}, EventEmitter.prototype, {
    */
   getAll: function() {
     return _todos;
+  },
+
+  getFilter: function() {
+    return _todoFilter;
   },
 
   emitChange: function() {
@@ -204,6 +195,12 @@ AppDispatcher.register(function(action) {
     case TodoConstants.TODO_CYCLE_CASE:
       console.log('IN TODOSTORE > TODO_CYCLE_CASE with action:', action);
       cycleCase(action.id);
+      TodoStore.emitChange();
+      break;
+
+    case TodoConstants.TODO_CYCLE_FILTER:
+      console.log('IN TODOSTORE > TODO_CYCLE_FILTER with _todoFilter:' + _todoFilter);
+      cycleFilter();
       TodoStore.emitChange();
       break;
 
